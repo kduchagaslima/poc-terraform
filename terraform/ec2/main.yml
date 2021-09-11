@@ -1,0 +1,24 @@
+---
+- name: Post config on Amazon Linux
+  hosts: "{{limit}}"
+  become: true
+  tasks: 
+  - name: Install basic packages
+    yum:
+      name:
+        - git
+        - cowsay
+        - httpd
+      state: latest
+
+  - name: Checkout a repository
+    ansible.builtin.git:
+      repo: 'https://github.com/kduchagaslima/lava-rapido-mps.git'
+      dest: /var/www/html
+      version: master
+ 
+  - name: Make sure the Apache service is enable
+    ansible.builtin.service:
+      name: httpd
+      enabled: yes
+      state: restarted      
